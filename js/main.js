@@ -5,8 +5,8 @@ function init(){
   center: [53.901596, 27.551975],
   zoom: 6
   });
-  Map.events.add('click', (foo) => {
-    let coords = foo.get('coords');
+  Map.events.add('click', (e) => {
+    let coords = e.get('coords');
     let weather = requestWeather(coords);
     Map.balloon.open(coords, {
       contentHeader: weather.temperature
