@@ -9,8 +9,7 @@ function init(){
     let coords = foo.get('coords');
     let weather = requestWeather(coords);
     Map.balloon.open(coords, {
-      contentHeader: weather.name,
-      contentBody: weather.temperature
+      contentHeader: weather.temperature
     });
   });
 }
@@ -23,8 +22,7 @@ function requestWeather(coords) {
             "&lon=" + lon + "&appid=e409a8d16fd831b64ac77fa22ebc3d8e";
   request.open('GET', url, false);
   request.send();
-  if (request.status != 200) {
-  } else {
+  if (request.status == 200) {
     return makeFormat(request.responseText);
   }
 }
@@ -34,7 +32,6 @@ function makeFormat(forecast) {
   let weather = {};
   weather.temperature = forecast.main.temp - 273.15;
   weather.temperature = weather.temperature.toFixed(0);
-  weather.name = forecast.name;
   return weather;
 }
 
