@@ -7,31 +7,21 @@ function init(){
   });
   Map.events.add('click', (e) => {
     let coords = e.get('coords');
-    let weather = requestWeather(coords);
-    Map.balloon.open(coords, {
-      contentHeader: weather.temperature
-    });
+    let weather = {};
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&appid=e409a8d16fd831b64ac77fa22ebc3d8e`)
+      .then( request => request.json())
+      .then( (request) => {
+        weather = makeFormat(request);
+        Map.balloon.open(coords, {
+          contentHeader: weather.temperature
+        });
+      });
   });
 }
 
-function requestWeather(coords) {
-  let lat = coords[0];
-  let lon = coords[1];
-  let request = new XMLHttpRequest();
-  let url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + 
-            "&lon=" + lon + "&appid=e409a8d16fd831b64ac77fa22ebc3d8e";
-  request.open('GET', url, false);
-  request.send();
-  if (request.status == 200) {
-    return makeFormat(request.responseText);
-  }
-}
-
 function makeFormat(forecast) {
-  forecast = JSON.parse(forecast);
   let weather = {};
-  weather.temperature = forecast.main.temp - 273.15;
-  weather.temperature = weather.temperature.toFixed(0);
+  weather.temperature = (forecast.main.temp - 273.15).toFixed(0);
   return weather;
 }
 
